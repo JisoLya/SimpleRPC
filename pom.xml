@@ -13,6 +13,7 @@
         <module>example-consumer</module>
         <module>example-provider</module>
         <module>soyan-rpc-easy</module>
+        <module>soyan-rpc-core</module>
     </modules>
 
     <properties>
