@@ -9,7 +9,7 @@ import org.dom4j.io.SAXReader;
 import java.io.File;
 
 public class XmlReader {
-    public static RpcConfig parseXMLtoObject(String filepath,String prefix) throws DocumentException {
+    public static RpcConfig parseXmltoObject(String filepath,String prefix) throws DocumentException {
         SAXReader saxReader = new SAXReader();
         Document document = saxReader.read(new File(filepath));
         Element root = document.getRootElement();

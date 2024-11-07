@@ -7,6 +7,7 @@ import org.dom4j.DocumentException;
 import org.w3c.dom.Document;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 public class ConfigUtils {
 
@@ -31,7 +32,7 @@ public class ConfigUtils {
      * @param <T>
      * @return
      */
-    public static <T> T loadConfig(Class<T> tClass, String prefix, String environment) throws DocumentException {
+    public static <T> T loadConfig(Class<T> tClass, String prefix, String environment) {
         //TODO 读取不同类型的配置文件 .xml .yaml .properties
         StringBuilder builder = new StringBuilder("application");
         if (StrUtil.isNotBlank(environment)) {
@@ -52,12 +53,16 @@ public class ConfigUtils {
             return props.toBean(tClass, prefix);
         } else if (configFileName.endsWith(".xml")) {
             try {
-                return (T) XmlReader.parseXMLtoObject(file + configFileName,prefix);
+                return (T) XmlReader.parseXmltoObject(file + configFileName,prefix);
             } catch (DocumentException e) {
                 e.printStackTrace();
             }
-        } else if (configFileName.endsWith(".yaml")) {
-
+        } else if (configFileName.endsWith(".yaml")||configFileName.endsWith(".yml")) {
+            try {
+                return (T) YmlReader.parseYmlToObject(file+configFileName,prefix);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
         System.out.println("Undefined file suffix!");
         return null;
