@@ -1,11 +1,15 @@
 package com.liu.rpc.config;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
- * RPC框架配置
+ * RPC框架默认配置
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class RpcConfig {
     /**
      * 框架名称

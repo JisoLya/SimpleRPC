@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+    <rpc>
+        <name>rpcConfigInXml</name>
+        <version>1.1.1</version>
+        <host>localhost</host>
+        <port>8081</port>
+    </rpc>
+</config>
+
