@@ -1,0 +1,5 @@
+rpc:
+  name: yamlConfig
+  version: 1.0.2
+  serverHost: 127.0.0.1
+  serverPort: 8081
