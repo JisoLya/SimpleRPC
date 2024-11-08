@@ -33,7 +33,7 @@ public class ConfigUtils {
      * @return
      */
     public static <T> T loadConfig(Class<T> tClass, String prefix, String environment) {
-        //TODO 读取不同类型的配置文件 .xml .yaml .properties
+        //TODO 监听配置文件的变更
         StringBuilder builder = new StringBuilder("application");
         if (StrUtil.isNotBlank(environment)) {
             builder.append("-").append(environment);
@@ -50,6 +50,7 @@ public class ConfigUtils {
         if (configFileName.endsWith(".properties")) {
             builder.append(".properties");
             Props props = new Props(builder.toString());
+
             return props.toBean(tClass, prefix);
         } else if (configFileName.endsWith(".xml")) {
             try {
@@ -69,10 +70,6 @@ public class ConfigUtils {
 
         //2. 分析其后缀，调用不同的文件读取器
         //3. 封装到Bean，返回
-    }
-
-    public static void test() {
-
     }
 
 }

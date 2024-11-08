@@ -1,5 +1,6 @@
 package com.liu;
 
+import cn.hutool.setting.dialect.Props;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -34,5 +35,10 @@ public class Test {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    @org.junit.Test
+    public void test03(){
+        Props prop = Props.getProp("E:\\GitRepository\\2024study\\RPCInfra\\soyan-rpc-core\\src\\test\\java\\com\\liu\\test.yaml");
+        System.out.println(prop.toBean(Person.class));
     }
 }
