@@ -12,8 +12,8 @@ public class EasyConsumer {
 
         RpcConfig rpc = ConfigUtils.loadConfig(RpcConfig.class, "rpc");
         System.out.println(rpc);
+        //测试Mock逻辑，这里获取到了user = null,number = 0,走了给默认值的逻辑..
         UserService service = ServiceProxyFactory.getMockProxy(UserService.class);
-
         User user = new User();
         user.setUsername("liu");
         service.getUser(user);
