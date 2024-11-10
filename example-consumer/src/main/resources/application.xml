@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-
-<rpc>
-    <name>xml</name>
-    <version>1.2.3</version>
-    <serverHost>127.0.0.3</serverHost>
-    <serverPort>9090</serverPort>
-</rpc>

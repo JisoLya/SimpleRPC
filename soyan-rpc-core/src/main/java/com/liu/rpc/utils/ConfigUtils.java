@@ -1,13 +1,7 @@
 package com.liu.rpc.utils;
 
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.XmlUtil;
-import cn.hutool.setting.dialect.Props;
-import org.dom4j.DocumentException;
-import org.w3c.dom.Document;
-
 import java.io.File;
-import java.io.FileNotFoundException;
+
 import java.util.Objects;
 
 public class ConfigUtils {
@@ -20,7 +14,7 @@ public class ConfigUtils {
      * @param <T>
      * @return
      */
-    public static <T> T loadConfig(Class<T> tClass, String prefix) throws DocumentException {
+    public static <T> T loadConfig(Class<T> tClass, String prefix){
         return loadConfig(tClass, prefix, "");
     }
 
@@ -45,8 +39,10 @@ public class ConfigUtils {
         File target = new File(file);
         String configFileName = "";
         for (File f : Objects.requireNonNull(target.listFiles())) {
+            //有临时文件则读取临时文件
             if (f.getName().startsWith("application")) {
                 configFileName = f.getName();
+                break;
             }
         }
         return configFileName;

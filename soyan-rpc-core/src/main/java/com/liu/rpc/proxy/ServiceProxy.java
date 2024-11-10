@@ -1,7 +1,8 @@
-package com.liu.consumer;
+package com.liu.rpc.proxy;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import com.liu.rpc.RpcApplication;
 import com.liu.rpc.model.RpcRequest;
 import com.liu.rpc.model.RpcResponse;
 import com.liu.rpc.serializer.JdkSerializer;
@@ -15,7 +16,7 @@ import java.lang.reflect.Method;
  */
 public class ServiceProxy implements InvocationHandler {
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    public Object invoke(Object proxy, Method method, Object[] args) {
         JdkSerializer serializer = new JdkSerializer();
 
         RpcRequest rpcRequest = RpcRequest.builder()
@@ -28,7 +29,8 @@ public class ServiceProxy implements InvocationHandler {
         try{
             byte[] bytes = serializer.serialize(rpcRequest);
             byte[] result;
-            try(HttpResponse response = HttpRequest.post("http://localhost:8080").body(bytes).execute()) {
+            //修改为了软编码，获取配置文件的信息..
+            try(HttpResponse response = HttpRequest.post("http://localhost:"+ RpcApplication.getRpcConfig().getServerPort()).body(bytes).execute()) {
                 result = response.bodyBytes();
             }
             RpcResponse rpcResponse = serializer.deserialize(result, RpcResponse.class);

@@ -16,13 +16,10 @@ import java.util.Map;
 
 public class Test {
     @org.junit.Test
-    public void test01() throws SAXException, DocumentException {
-        SAXReader reader = new SAXReader();
-        Document document = reader.read(new File("E:\\GitRepository\\2024study\\RPCInfra\\soyan-rpc-core\\src\\test\\java\\com\\liu\\test.xml"));
-        Element rootElement = document.getRootElement();
-        Element person = rootElement.element("person");
-        String name = person.elementText("name");
-        System.out.println(name);
+    public void test01() throws DocumentException, IOException {
+        Props props = new Props();
+        props.loadFromXML(new FileInputStream("E:\\GitRepository\\2024study\\RPCInfra\\soyan-rpc-core\\src\\test\\java\\com\\liu\\test.xml"));
+        System.out.println(props);
     }
 
     @org.junit.Test
@@ -39,6 +36,7 @@ public class Test {
     @org.junit.Test
     public void test03(){
         Props prop = Props.getProp("E:\\GitRepository\\2024study\\RPCInfra\\soyan-rpc-core\\src\\test\\java\\com\\liu\\test.yaml");
+        prop.store("test.properties");
         System.out.println(prop.toBean(Person.class));
     }
 }

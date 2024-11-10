@@ -1,6 +1,7 @@
 package com.liu.rpc.utils;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.setting.dialect.Props;
 import com.liu.rpc.config.RpcConfig;
 import org.dom4j.Attribute;
@@ -19,7 +20,7 @@ public class PropertiesReader {
     public static <T> T getProps(String prefix, String fileName, Class<T> clazz) {
         if (fileName.endsWith(".properties")) {
             Props props = new Props(fileName);
-            return props.toBean(clazz, prefix);
+            props.store("temp-application.properties");
         } else if (fileName.endsWith(".xml")) {
             //1. 创建XML读取器
             File file = FileUtil.file(fileName);
@@ -27,11 +28,9 @@ public class PropertiesReader {
             try {
                 Document document = reader.read(file);
                 Element root = document.getRootElement();
-
                 Props props = new Props();
                 parseElement(root, "", props);
-
-                return props.toBean(clazz, prefix);
+                props.store("temp-application.properties");
             } catch (DocumentException e) {
                 e.printStackTrace();
             }
@@ -44,12 +43,14 @@ public class PropertiesReader {
                 Map<String, Object> data = yaml.load(inputStream);
                 Props props = new Props();
                 convertMaptoProps(data, "", props);
-                return props.toBean(clazz, prefix);
+                props.store("temp-application.properties");
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        return (T) new RpcConfig();
+        Props props = new Props("temp-application.properties");
+        props.autoLoad(true);
+        return props.toBean(clazz,prefix);
     }
 
     private static void parseElement(Element element, String prefix, Props props) {

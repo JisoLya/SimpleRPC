@@ -9,4 +9,8 @@ public interface UserService {
      * @return 用户
      */
     User getUser(User user);
+
+    default int getNumber(){
+        return 1;
+    }
 }

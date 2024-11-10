@@ -29,7 +29,7 @@ public class RpcApplication {
      * 获取配置信息
      * @return
      */
-    public RpcConfig getRpcConfig() {
+    public static RpcConfig getRpcConfig() {
         if (rpcConfig == null) {
             //此时配置空则获取配置信息
             synchronized (RpcApplication.class) {

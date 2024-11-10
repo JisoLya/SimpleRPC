@@ -1,13 +1,24 @@
 package com.liu.consumer;
 
+import com.liu.example.common.model.User;
+import com.liu.example.common.service.UserService;
 import com.liu.rpc.config.RpcConfig;
+import com.liu.rpc.proxy.ServiceProxyFactory;
 import com.liu.rpc.utils.ConfigUtils;
-import org.dom4j.DocumentException;
 
 
 public class EasyConsumer {
-    public static void main(String[] args) throws DocumentException {
+    public static void main(String[] args) {
+
         RpcConfig rpc = ConfigUtils.loadConfig(RpcConfig.class, "rpc");
         System.out.println(rpc);
+        UserService service = ServiceProxyFactory.getMockProxy(UserService.class);
+
+        User user = new User();
+        user.setUsername("liu");
+        service.getUser(user);
+        int number = service.getNumber();
+        System.out.println(number);
+
     }
 }

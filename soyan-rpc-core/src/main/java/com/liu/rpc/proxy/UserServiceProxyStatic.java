@@ -1,4 +1,4 @@
-package com.liu.consumer;
+package com.liu.rpc.proxy;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
@@ -29,6 +29,7 @@ public class UserServiceProxyStatic implements UserService {
         try {
             byte[] bodyBytes = serializer.serialize(rpcRequest);
             byte[] result;
+            //这里采取的是默认的硬编码，如果要测试需要改成端口与配置文件相同的
             try (HttpResponse response = HttpRequest.post("http://localhost:8080")
                     .body(bodyBytes)
                     .execute()) {
