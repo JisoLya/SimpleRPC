@@ -23,9 +23,10 @@ public class HttpServerHandler implements Handler<HttpServerRequest> {
 
         final Serializer serializer = SerializerFactory.getInstance(RpcApplication.getRpcConfig().getSerializer());
 
+        System.out.println("Receive Request :" + request.method() + " " + request.uri());
         request.bodyHandler(body -> {
             byte[] bytes = body.getBytes();
-            RpcRequest rpcRequest;
+            RpcRequest rpcRequest = null;
 
             //解码字节数据封装到RpcRequest对象中
             try {

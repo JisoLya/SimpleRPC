@@ -16,6 +16,7 @@ public class ExampleProvider {
         LocalRegistry.registry(UserService.class.getName(),UserServiceImpl.class);
 
         VertxHttpServer server = new VertxHttpServer();
+        //监听配置端口
         server.doStart(config.getServerPort());
     }
 }

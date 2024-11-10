@@ -19,7 +19,9 @@ public class JsonSerializer implements Serializer {
         T value = OBJECT_MAPPER.readValue(data, clazz);
         if (value instanceof RpcRequest) {
             return handleRequest((RpcRequest) value, clazz);
-        } else if (value instanceof RpcResponse) {
+        }
+
+        if (value instanceof RpcResponse) {
             return handleResponse((RpcResponse) value, clazz);
         }
         return value;

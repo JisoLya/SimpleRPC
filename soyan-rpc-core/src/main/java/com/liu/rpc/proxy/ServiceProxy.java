@@ -6,6 +6,8 @@ import com.liu.rpc.RpcApplication;
 import com.liu.rpc.model.RpcRequest;
 import com.liu.rpc.model.RpcResponse;
 import com.liu.rpc.serializer.JdkSerializer;
+import com.liu.rpc.serializer.Serializer;
+import com.liu.rpc.serializer.SerializerFactory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -17,8 +19,7 @@ import java.lang.reflect.Method;
 public class ServiceProxy implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) {
-        JdkSerializer serializer = new JdkSerializer();
-
+        final Serializer serializer = SerializerFactory.getInstance(RpcApplication.getRpcConfig().getSerializer());
         RpcRequest rpcRequest = RpcRequest.builder()
                 .paramTypes(method.getParameterTypes())
                 .params(args)
