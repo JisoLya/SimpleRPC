@@ -1,5 +1,6 @@
 package com.liu.rpc.model;
 
+import com.liu.rpc.constant.RpcConstant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,9 +10,9 @@ import java.io.Serializable;
 
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class RpcRequest implements Serializable {
     /**
      * 服务名
@@ -29,4 +30,10 @@ public class RpcRequest implements Serializable {
      * 方法的参数类型
      */
     private Class<?>[] paramTypes;
+
+    /**
+     * 默认获取服务的版本号
+     */
+    @Builder.Default
+    private String serviceVersion = RpcConstant.DEFAULT_SERVICE_VERSION;
 }
