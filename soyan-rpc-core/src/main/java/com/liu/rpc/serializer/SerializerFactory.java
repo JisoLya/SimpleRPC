@@ -1,12 +1,10 @@
 package com.liu.rpc.serializer;
 
+import cn.hutool.core.util.StrUtil;
 import com.liu.rpc.spi.SpiLoader;
 
 
 public class SerializerFactory {
-    static {
-        SpiLoader.load(Serializer.class);
-    }
 
     private static final Serializer DEFAULT_SERIALIZER = new JdkSerializer();
 
@@ -16,6 +14,10 @@ public class SerializerFactory {
      * @return  序列化器
      */
     public static Serializer getInstance(String key){
+        if (StrUtil.isBlank(key)){
+            return DEFAULT_SERIALIZER;
+        }
+        SpiLoader.load(Serializer.class);
         return SpiLoader.getInstance(Serializer.class,key);
     }
 }

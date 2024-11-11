@@ -1,11 +1,9 @@
 package com.liu.rpc.server;
 
 import com.liu.rpc.RpcApplication;
-import com.liu.rpc.config.RpcConfig;
 import com.liu.rpc.model.RpcRequest;
 import com.liu.rpc.model.RpcResponse;
 import com.liu.rpc.registry.LocalRegistry;
-import com.liu.rpc.serializer.JdkSerializer;
 import com.liu.rpc.serializer.Serializer;
 import com.liu.rpc.serializer.SerializerFactory;
 import io.vertx.core.Handler;
