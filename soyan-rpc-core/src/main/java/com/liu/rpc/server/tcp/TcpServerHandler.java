@@ -21,7 +21,7 @@ public class TcpServerHandler implements Handler<NetSocket> {
                     try {
                         protocolMessage = (ProtocolMessage<RpcRequest>) ProtocolMessageDecoder.decode(buffer);
                     } catch (IOException e) {
-                        throw new RuntimeException(e);
+                        throw new RuntimeException("Server:消息解码错误");
                     }
                     //获取请求
                     RpcRequest request = protocolMessage.getBody();
@@ -30,7 +30,7 @@ public class TcpServerHandler implements Handler<NetSocket> {
                     try {
                         String serviceName = request.getServiceName();
                         Class<?> implClass = LocalRegistry.get(serviceName);
-                        Method method = implClass.getMethod(request.getMethodName());
+                        Method method = implClass.getMethod(request.getMethodName(),request.getParamTypes());
                         Object result = method.invoke(implClass.getDeclaredConstructor().newInstance(), request.getParams());
 
                         response.setData(result);
@@ -53,7 +53,7 @@ public class TcpServerHandler implements Handler<NetSocket> {
                         Buffer encode = ProtocolMessageEncoder.encode(responseMessage);
                         netSocket.write(encode);
                     } catch (IOException e) {
-                        throw new RuntimeException("协议返回编码错误！");
+                        throw new RuntimeException("Server:协议返回编码错误！");
                     }
                 }
         );

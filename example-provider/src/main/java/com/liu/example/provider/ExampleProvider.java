@@ -15,7 +15,7 @@ public class ExampleProvider {
         //配置初始化
         RpcApplication.init();
 
-        //服务的注册
+        //本地注册服务
         String serviceName = UserService.class.getName();
         LocalRegistry.registry(serviceName,UserServiceImpl.class);
         //注册服务到注册中心

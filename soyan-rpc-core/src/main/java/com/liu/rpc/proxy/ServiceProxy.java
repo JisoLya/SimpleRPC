@@ -85,7 +85,7 @@ public class ServiceProxy implements InvocationHandler {
                         Buffer buffer = ProtocolMessageEncoder.encode(protocolMessage);
                         socket.write(buffer);
                     } catch (IOException e) {
-                        throw new RuntimeException("协议消息编码错误");
+                        throw new RuntimeException("Client：协议消息编码错误");
                     }
 
 //                    接受响应
@@ -94,7 +94,7 @@ public class ServiceProxy implements InvocationHandler {
                             ProtocolMessage<RpcResponse> message = (ProtocolMessage<RpcResponse>) ProtocolMessageDecoder.decode(buffer);
                             future.complete(message.getBody());
                         } catch (Exception e) {
-                            throw new RuntimeException("消息协议解码错误");
+                            throw new RuntimeException("Client：消息协议解码错误");
                         }
                     });
 
