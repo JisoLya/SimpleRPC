@@ -21,13 +21,16 @@ public class RpcApplication {
         Registry registry = RegistryFactory.getInstance(configRegistry.getRegistry());
         registry.init(configRegistry);
         log.info("Registry init,registry:{}", registry);
+
+        //JVM的Shutdown Hook机制允许在程序正常退出时执行一些操作，例如：关闭数据库连接池，保存临时文件等
+        Runtime.getRuntime().addShutdownHook(new Thread(registry::destroy));
     }
 
     public static void init() {
         RpcConfig newRpcConfig;
         try {
             newRpcConfig = ConfigUtils.loadConfig(RpcConfig.class, RpcConstant.DEFAULT_CONFIG_PREFIX);
-        }catch (Exception e) {
+        } catch (Exception e) {
             //加载失败，采取默认值
             newRpcConfig = new RpcConfig();
         }
@@ -36,6 +39,7 @@ public class RpcApplication {
 
     /**
      * 获取配置信息
+     *
      * @return 返回配置信息
      */
     public static RpcConfig getRpcConfig() {

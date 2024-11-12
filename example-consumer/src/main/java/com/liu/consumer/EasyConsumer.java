@@ -8,7 +8,7 @@ import com.liu.rpc.utils.ConfigUtils;
 
 
 public class EasyConsumer {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
         RpcConfig rpc = ConfigUtils.loadConfig(RpcConfig.class, "rpc");
         System.out.println(rpc);
@@ -17,8 +17,11 @@ public class EasyConsumer {
         User user = new User();
         user.setUsername("liu");
         service.getUser(user);
-        int number = service.getNumber();
-        System.out.println(number);
 
+        service.getUser(user);
+
+        Thread.sleep(20*100L);
+
+        service.getUser(user);
     }
 }
