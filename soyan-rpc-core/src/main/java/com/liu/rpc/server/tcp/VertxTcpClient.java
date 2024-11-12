@@ -1,7 +1,6 @@
 package com.liu.rpc.server.tcp;
 
 import io.vertx.core.Vertx;
-import io.vertx.core.http.HttpClient;
 import io.vertx.core.net.NetClient;
 import io.vertx.core.net.NetSocket;
 

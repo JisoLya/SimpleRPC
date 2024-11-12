@@ -18,8 +18,6 @@ public class EasyConsumer {
         user.setUsername("liu");
         service.getUser(user);
 
-        service.getUser(user);
-
         Thread.sleep(20*100L);
 
         service.getUser(user);

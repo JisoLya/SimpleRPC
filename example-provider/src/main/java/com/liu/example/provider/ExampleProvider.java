@@ -8,7 +8,7 @@ import com.liu.rpc.model.ServiceMetaInfo;
 import com.liu.rpc.registry.LocalRegistry;
 import com.liu.rpc.registry.Registry;
 import com.liu.rpc.registry.RegistryFactory;
-import com.liu.rpc.server.VertxHttpServer;
+import com.liu.rpc.server.tcp.VertxTcpServer;
 
 public class ExampleProvider {
     public static void main(String[] args) {
@@ -34,7 +34,7 @@ public class ExampleProvider {
         }
 
         //启动服务
-        VertxHttpServer server = new VertxHttpServer();
+        VertxTcpServer server = new VertxTcpServer();
         //监听配置端口
         server.doStart(rpcConfig.getServerPort());
     }
