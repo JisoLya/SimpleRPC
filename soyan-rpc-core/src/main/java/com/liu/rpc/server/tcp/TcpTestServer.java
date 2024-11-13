@@ -1,9 +1,7 @@
 package com.liu.rpc.server.tcp;
 
 import com.liu.rpc.server.HttpServer;
-import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
-import io.vertx.core.buffer.Buffer;
 import io.vertx.core.net.NetServer;
 import io.vertx.core.parsetools.RecordParser;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +25,9 @@ public class TcpTestServer implements HttpServer {
                 int messageLength = testMessage.getBytes().length;
                 //解决半包与粘包问题
                 //每次读取固定的长度
+                /**
+                 * 实际情况是，在读取数据包的过程中，消息体是变长的，因此我们需要修改一下逻辑，将一次读取分为先读取头部，再读取数据部分！
+                 */
                 RecordParser recordParser = RecordParser.newFixed(messageLength);
                 recordParser.setOutput(
                         buffer1 -> {
