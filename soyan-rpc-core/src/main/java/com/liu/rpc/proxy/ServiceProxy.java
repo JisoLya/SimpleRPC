@@ -6,6 +6,8 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.liu.rpc.RpcApplication;
 import com.liu.rpc.constant.ProtocolConstant;
+import com.liu.rpc.loadbalancer.LoadBalancer;
+import com.liu.rpc.loadbalancer.LoadBalancerFactory;
 import com.liu.rpc.protocol.*;
 import com.liu.rpc.registry.Registry;
 import com.liu.rpc.config.RpcConfig;
@@ -25,6 +27,7 @@ import io.vertx.core.net.NetSocket;
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -56,8 +59,13 @@ public class ServiceProxy implements InvocationHandler {
             if (CollUtil.isEmpty(serviceMetaInfos)) {
                 throw new RuntimeException("暂无服务地址");
             }
-            ServiceMetaInfo metaInfo = serviceMetaInfos.get(0);
 
+            //负载均衡
+            LoadBalancer loadBalancer = LoadBalancerFactory.getInstance(rpcConfig.getLoadBalancer());
+            HashMap<String, Object> requestPara = new HashMap<>();
+            requestPara.put("methodName", rpcRequest.getMethodName());
+
+            ServiceMetaInfo metaInfo = loadBalancer.select(requestPara, serviceMetaInfos);
             RpcResponse rpcResponse = VertxTcpClient.doResponse(rpcRequest, metaInfo);
             //不需要了,编码逻辑放在了Encoder里边
 //            byte[] bodyBytes = serializer.serialize(rpcRequest);
