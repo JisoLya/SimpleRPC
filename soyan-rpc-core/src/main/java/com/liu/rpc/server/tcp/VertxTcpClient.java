@@ -30,6 +30,7 @@ public class VertxTcpClient {
                 result -> {
                     if (!result.succeeded()) {
                         System.out.println("Failed to connect TCP server");
+                        //重试机制依赖捕获异常来生效，因此在测试时，停掉example-provider的时候，服务器会链接失败，这时需要抛出异常才可以进行失败重试策略.
                         future.completeExceptionally(new RuntimeException("Failed to connect TCP server"));
                         return;
                     }
