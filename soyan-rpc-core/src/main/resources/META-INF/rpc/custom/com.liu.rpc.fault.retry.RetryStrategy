@@ -1,0 +1,3 @@
+no=com.liu.rpc.fault.retry.NotRetryStrategy
+fixedTime=com.liu.rpc.fault.retry.FixedTimeRetryStrategy
+exponential=com.liu.rpc.fault.retry.ExponentRetryStrategy

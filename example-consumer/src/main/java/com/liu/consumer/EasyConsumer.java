@@ -16,11 +16,11 @@ public class EasyConsumer {
         UserService service = ServiceProxyFactory.getProxy(UserService.class);
         User user = new User();
         user.setUsername("liu");
+
         service.getUser(user);
 
-        System.out.println("Sleep...");
-        Thread.sleep(20*100L);
-
+        System.out.println("关闭服务");
+        Thread.sleep(20*1000L);
         service.getUser(user);
     }
 }

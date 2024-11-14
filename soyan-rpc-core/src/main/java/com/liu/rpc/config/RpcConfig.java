@@ -1,5 +1,6 @@
 package com.liu.rpc.config;
 
+import com.liu.rpc.fault.retry.RetryStrategyKeys;
 import com.liu.rpc.loadbalancer.LoadBalancer;
 import com.liu.rpc.loadbalancer.LoadBalancerKeys;
 import com.liu.rpc.serializer.SerializerKeys;
@@ -54,4 +55,8 @@ public class RpcConfig {
      */
     private String loadBalancer = LoadBalancerKeys.ROUND_ROBIN;
 
+    /**
+     * 失败重试策略
+     */
+    private String retryStrategy = RetryStrategyKeys.FIXED_TIME;
 }

@@ -6,6 +6,8 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.liu.rpc.RpcApplication;
 import com.liu.rpc.constant.ProtocolConstant;
+import com.liu.rpc.fault.retry.RetryStrategy;
+import com.liu.rpc.fault.retry.RetryStrategyFactory;
 import com.liu.rpc.loadbalancer.LoadBalancer;
 import com.liu.rpc.loadbalancer.LoadBalancerFactory;
 import com.liu.rpc.protocol.*;
@@ -64,11 +66,18 @@ public class ServiceProxy implements InvocationHandler {
             LoadBalancer loadBalancer = LoadBalancerFactory.getInstance(rpcConfig.getLoadBalancer());
             HashMap<String, Object> requestPara = new HashMap<>();
             requestPara.put("methodName", rpcRequest.getMethodName());
-
             ServiceMetaInfo metaInfo = loadBalancer.select(requestPara, serviceMetaInfos);
-            RpcResponse rpcResponse = VertxTcpClient.doResponse(rpcRequest, metaInfo);
+
+            // 这里一次失败我们直接抛出错误，但是获取不到服务有很多可能：网络故障，或者服务提供者重启
+            // 等等，在这些情况下，服务过一段时间就可以重新获取，我们需要给这段代码添加重试机制。
+
+            //重试机制
+            RetryStrategy retryStrategy = RetryStrategyFactory.getInstance(rpcConfig.getRetryStrategy());
+            RpcResponse rpcResponse = retryStrategy.doRetry(() ->
+                    VertxTcpClient.doResponse(rpcRequest, metaInfo));
             //不需要了,编码逻辑放在了Encoder里边
 //            byte[] bodyBytes = serializer.serialize(rpcRequest);
+
             return rpcResponse.getData();
         } catch (Exception e) {
             e.printStackTrace();
