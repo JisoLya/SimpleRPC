@@ -1,16 +1,17 @@
 package com.liu.rpc.proxy;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.IdUtil;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
+
+
 import com.liu.rpc.RpcApplication;
-import com.liu.rpc.constant.ProtocolConstant;
+
 import com.liu.rpc.fault.retry.RetryStrategy;
 import com.liu.rpc.fault.retry.RetryStrategyFactory;
+import com.liu.rpc.fault.tolerant.FaultTolerantFactory;
+import com.liu.rpc.fault.tolerant.TolerantStrategy;
 import com.liu.rpc.loadbalancer.LoadBalancer;
 import com.liu.rpc.loadbalancer.LoadBalancerFactory;
-import com.liu.rpc.protocol.*;
+
 import com.liu.rpc.registry.Registry;
 import com.liu.rpc.config.RpcConfig;
 import com.liu.rpc.constant.RpcConstant;
@@ -18,20 +19,16 @@ import com.liu.rpc.model.RpcRequest;
 import com.liu.rpc.model.RpcResponse;
 import com.liu.rpc.model.ServiceMetaInfo;
 import com.liu.rpc.registry.RegistryFactory;
-import com.liu.rpc.serializer.Serializer;
-import com.liu.rpc.serializer.SerializerFactory;
-import com.liu.rpc.server.tcp.VertxTcpClient;
-import io.vertx.core.Vertx;
-import io.vertx.core.buffer.Buffer;
-import io.vertx.core.net.NetClient;
-import io.vertx.core.net.NetSocket;
 
-import java.io.IOException;
+
+import com.liu.rpc.server.tcp.VertxTcpClient;
+
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+
 
 /**
  * 在静态代理中，我们需要给每一个方法都创建一个代理，及其的不方便，我们可以进一步改进为动态代理技术
@@ -43,12 +40,7 @@ public class ServiceProxy implements InvocationHandler {
         //获取序列化器
 //        final Serializer serializer = SerializerFactory.getInstance(RpcApplication.getRpcConfig().getSerializer());
         String serviceName = method.getDeclaringClass().getName();
-        RpcRequest rpcRequest = RpcRequest.builder()
-                .paramTypes(method.getParameterTypes())
-                .params(args)
-                .methodName(method.getName())
-                .serviceName(method.getDeclaringClass().getName())
-                .build();
+        RpcRequest rpcRequest = RpcRequest.builder().paramTypes(method.getParameterTypes()).params(args).methodName(method.getName()).serviceName(method.getDeclaringClass().getName()).build();
 
         try {
             //从配置中心获取服务地址
@@ -72,9 +64,21 @@ public class ServiceProxy implements InvocationHandler {
             // 等等，在这些情况下，服务过一段时间就可以重新获取，我们需要给这段代码添加重试机制。
 
             //重试机制
+            RpcResponse rpcResponse = null;
             RetryStrategy retryStrategy = RetryStrategyFactory.getInstance(rpcConfig.getRetryStrategy());
-            RpcResponse rpcResponse = retryStrategy.doRetry(() ->
-                    VertxTcpClient.doResponse(rpcRequest, metaInfo));
+            try {
+                rpcResponse = retryStrategy.doRetry(() -> VertxTcpClient.doResponse(rpcRequest, metaInfo));
+            } catch (Exception e) {
+                TolerantStrategy tolerantStrategy = FaultTolerantFactory.getInstance(rpcConfig.getTolerantStrategy());
+
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("rpcRequest", rpcRequest);
+                map.put("serviceMetaInfo", metaInfo);
+                map.put("serviceMetaInfoLists", serviceMetaInfos);
+
+                rpcResponse = tolerantStrategy.dpTolerant(map, e);
+
+            }
             //不需要了,编码逻辑放在了Encoder里边
 //            byte[] bodyBytes = serializer.serialize(rpcRequest);
 

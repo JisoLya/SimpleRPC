@@ -1,6 +1,7 @@
 package com.liu.rpc.config;
 
 import com.liu.rpc.fault.retry.RetryStrategyKeys;
+import com.liu.rpc.fault.tolerant.TolerantKeys;
 import com.liu.rpc.loadbalancer.LoadBalancer;
 import com.liu.rpc.loadbalancer.LoadBalancerKeys;
 import com.liu.rpc.serializer.SerializerKeys;
@@ -59,4 +60,9 @@ public class RpcConfig {
      * 失败重试策略
      */
     private String retryStrategy = RetryStrategyKeys.FIXED_TIME;
+
+    /**
+     * 失败容错机制
+     */
+    private String tolerantStrategy = TolerantKeys.FAIL_FAST;
 }

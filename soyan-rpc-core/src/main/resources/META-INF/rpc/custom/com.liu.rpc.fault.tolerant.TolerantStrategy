@@ -1,0 +1,3 @@
+failFast=com.liu.rpc.fault.tolerant.FailFastStrategy
+failOver=com.liu.rpc.fault.tolerant.FailOverStrategy
+failSafe=com.liu.rpc.fault.tolerant.FailSafeStrategy
