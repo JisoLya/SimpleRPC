@@ -50,7 +50,6 @@ public class FailOverStrategy implements TolerantStrategy {
             } catch (Exception exception) {
                 log.info("调用节点失败:{},删除失效节点", metaInfo);
                 removeFailNode(serviceInfoLists, metaInfo);
-                continue;
             }
         }
         throw new RuntimeException();
