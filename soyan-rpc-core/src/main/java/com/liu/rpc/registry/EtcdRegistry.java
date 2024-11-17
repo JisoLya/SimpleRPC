@@ -83,7 +83,7 @@ public class EtcdRegistry implements Registry {
             log.error("读取缓存");
             return cache;
         }
-        log.error("从注册中心拉取列表");
+        log.info("从注册中心拉取列表");
         try {
             GetOption getOption = GetOption.builder().isPrefix(true).build();
             List<KeyValue> keyValues = kvClient.get(
