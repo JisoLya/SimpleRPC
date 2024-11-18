@@ -39,7 +39,6 @@ public class ConfigUtils {
         File target = new File(file);
         String configFileName = "";
         for (File f : Objects.requireNonNull(target.listFiles())) {
-            //有临时文件则读取临时文件
             if (f.getName().startsWith("application")) {
                 configFileName = f.getName();
                 break;
