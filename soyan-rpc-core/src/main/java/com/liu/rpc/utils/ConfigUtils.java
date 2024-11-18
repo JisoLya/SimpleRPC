@@ -1,7 +1,12 @@
 package com.liu.rpc.utils;
 
+import cn.hutool.core.io.resource.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+
 import java.io.File;
 
+import java.io.IOException;
 import java.util.Objects;
 
 public class ConfigUtils {
@@ -14,7 +19,7 @@ public class ConfigUtils {
      * @param <T>
      * @return
      */
-    public static <T> T loadConfig(Class<T> tClass, String prefix){
+    public static <T> T loadConfig(Class<T> tClass, String prefix) {
         return loadConfig(tClass, prefix, "");
     }
 
@@ -28,22 +33,21 @@ public class ConfigUtils {
      * @return
      */
     public static <T> T loadConfig(Class<T> tClass, String prefix, String environment) {
-        //TODO 监听配置文件的变更
         //1. 查找带有application-environment前缀的文件
         String configFileName = getConfigFileName();
-        return PropertiesReader.getProps(prefix,configFileName,tClass);
+        return PropertiesReader.getProps(prefix, configFileName, tClass);
     }
-    
-    private static String getConfigFileName(){
-        String file = Objects.requireNonNull(ConfigUtils.class.getClassLoader().getResource("")).getFile();
-        File target = new File(file);
-        String configFileName = "";
-        for (File f : Objects.requireNonNull(target.listFiles())) {
-            if (f.getName().startsWith("application")) {
-                configFileName = f.getName();
-                break;
-            }
+
+    private static String getConfigFileName() {
+        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+        String pattern = "classpath*:application*";
+        org.springframework.core.io.Resource[] resources = null;
+        try {
+            resources = resolver.getResources(pattern);
+        }catch (Exception e) {
+            e.printStackTrace();
         }
-        return configFileName;
+
+        return resources[0].getFilename();
     }
 }
